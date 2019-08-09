@@ -15,8 +15,8 @@ async function fetchTeraPage(url, cacheTime = 0, ignoreCache = false) {
       }
     }
     html = await request(url);
-    if (cacheTime) {
-      if (typeof cacheTime === 'number' && cacheTime > 0) {
+    if (typeof cacheTime === 'number') {
+      if (cacheTime > 0) {
         cache.client.set(cache.generateKey(url), html, 'EX', cacheTime);
       } else {
         cache.client.set(cache.generateKey(url), html);

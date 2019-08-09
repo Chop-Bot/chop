@@ -1,7 +1,12 @@
 const cheerio = require('cheerio');
 
-function getServerFromTR($, tr) {
-  const server = { name: '', type: '', status: true };
+function getServerFromTR($, tr, platform) {
+  const server = {
+    name: '',
+    type: '',
+    status: true,
+    platform,
+  };
   let current = $(tr)
     .find('td')
     .first();
@@ -43,7 +48,7 @@ function getStatus(html) {
       .find('tbody')
       .children()
       .each((_, server) => {
-        serverStatus.servers.push(getServerFromTR($, server));
+        serverStatus.servers.push(getServerFromTR($, server, serverStatus.platform));
       });
 
     serverStatuses.push(serverStatus);

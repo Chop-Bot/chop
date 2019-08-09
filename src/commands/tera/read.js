@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const log = require('../../config/log');
 const parseUrl = require('../../services/tera-general/parseUrl');
@@ -42,15 +42,18 @@ module.exports = {
       order = parseOrder(args[1], news.length);
     }
 
-    const embed = new RichEmbed();
+    const embed = new MessageEmbed();
 
-    fetchPage(parseUrl(news[order].href)).then((html) => {
+    fetchPage(parseUrl(news[order].href), 30 * 60).then((html) => {
       const summary = getSummary(html);
       embed.addField(
         `${getNewsEmojis(news[order].platforms)}${summary.title}`,
-        `[Read on Tera Website](${parseUrl(news[order].href)})`,
+        `${news[order].content} [Read on Tera Website](${parseUrl(news[order].href)})`,
       );
-      embed.addField('Summary', summary.topics.map(t => `▫${t}`));
+      const newsSummary = summary.topics.map(t => `▫${t}`);
+      if (newsSummary.length > 0) {
+        embed.addField('Summary', newsSummary);
+      }
       embed.setImage(summary.img);
       message.channel.send(embed);
     });

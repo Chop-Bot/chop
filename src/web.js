@@ -19,5 +19,5 @@ module.exports = () => {
     });
   });
 
-  log.info(`[Web] Express server listening at port ${port}`);
+  log.info(`[Web] Express server listening at port ${port}.`);
 };

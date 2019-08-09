@@ -20,17 +20,3 @@ function getSummary(html) {
 }
 
 module.exports = getSummary;
-
-/*
-request >> http://tera.enmasse.com/news/categories/windows
-
-Array.from(document.querySelectorAll('.blog_post:not(.featured)')).filter(post =>
-    post.querySelector('.platform_icon.windows')
-);
-
-request >> firstChild.href
-
-for (h2 of document.querySelectorAll('.content h2')) {
-    console.log(h2.innerText);
-}
-*/

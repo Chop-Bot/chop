@@ -19,13 +19,13 @@ REQUIRED_VARS.forEach((VAR) => {
 });
 
 if (!hasAllRequiredVars) {
-  const critical = log.getLogger('critical');
-  critical.error('Oh no.');
-  critical.error(
+  const logger = log.getLogger('critical');
+  logger.error('Oh no.');
+  logger.error(
     'It seems you are missing one or more required enviroment variables this bot requires to function.',
   );
-  critical.error('Could you please fill the generated .env file with the missing data?');
-  critical.error('Note: You can move the generated .env somewhere else.');
+  logger.error('Could you please fill the generated .env file with the missing data?');
+  logger.error('Note: You can move the generated .env somewhere else.');
   try {
     fs.writeFileSync(path.join(__dirname, '.env'), data, 'utf8');
   } catch {

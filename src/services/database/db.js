@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const log = require('./log');
+const logError = require('../../util/logError');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -8,9 +8,7 @@ function connect(cb) {
   mongoose
     .connect(MONGODB_URI, { useNewUrlParser: true })
     .then(cb, (err) => {
-      log.getLogger('critical').error('[Database] Could not connect to database!');
-      log.getLogger('critical').error(err.message);
-      log.getLogger('critical').error(err.stack);
+      logError('[Database] Could not connect to database!', err, true);
     })
     .catch((err) => {
       process.exit(1);

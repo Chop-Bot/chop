@@ -7,11 +7,13 @@ const log = require('./config/log');
 const logError = require('./util/logError');
 const commandConfig = require('./config/command');
 const events = require('./events');
+const startSchedule = require('./Schedule');
 
 module.exports = function bot() {
   const client = new Discord.Client();
 
   client.on('ready', () => {
+    startSchedule(client);
     log.info(`[Discord] It's coffee time! [${client.user.tag}]`);
   });
 

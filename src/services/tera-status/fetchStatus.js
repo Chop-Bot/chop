@@ -5,7 +5,7 @@ const getStatus = require('./getStatus');
 
 async function fetchTeraStatus() {
   try {
-    const html = await fetchPage(parseUrl('support/server-status'));
+    const html = await fetchPage(parseUrl('support/server-status'), false, true);
     const statuses = getStatus(html);
     return statuses;
   } catch (err) {

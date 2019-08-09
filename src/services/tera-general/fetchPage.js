@@ -3,8 +3,7 @@ const request = require('request-promise-native');
 const log = require('../../config/log');
 const cache = require('../cache/cache');
 
-// TODO: cache the result of this with the new cache system
-async function fetchTeraPage(url, keepCache = true, ignoreCache = false) {
+async function fetchTeraPage(url, cacheTime = 0, ignoreCache = false) {
   let html;
   try {
     const key = cache.generateKey(url);
@@ -14,8 +13,12 @@ async function fetchTeraPage(url, keepCache = true, ignoreCache = false) {
       return cachedData;
     }
     html = await request(url);
-    if (keepCache) {
-      cache.client.set(cache.generateKey(url), html);
+    if (cacheTime) {
+      if (typeof cacheTime === 'number' && cacheTime > 0) {
+        cache.client.set(cache.generateKey(url), html, 'EX', cacheTime);
+      } else {
+        cache.client.set(cache.generateKey(url), html);
+      }
     }
     return html;
   } catch (e) {

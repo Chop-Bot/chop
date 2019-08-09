@@ -1,5 +1,6 @@
 require('./config/environment');
 const log = require('./config/log');
+const logError = require('./util/logError');
 const db = require('./services/database/db');
 const cache = require('./services/cache/cache');
 const events = require('./events');
@@ -8,8 +9,13 @@ const web = require('./web');
 
 db((mongo) => {
   log.info('[Database] MongoDB Connected.');
-  bot();
-  web();
+  try {
+    bot();
+    web();
+  } catch (err) {
+    logError('[Index] Unhandled promise caught. Restarting.', err, true);
+    process.exit(1);
+  }
 });
 
 events.on('kill', () => {
@@ -18,3 +24,4 @@ events.on('kill', () => {
 });
 
 process.on('SIGTERM', () => events.emit('kill'));
+process.on('SIGINT', () => events.emit('kill'));

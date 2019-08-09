@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const log = require('../../config/log');
 const fetchStatus = require('../../services/tera-status/fetchStatus');
@@ -21,7 +21,7 @@ module.exports = {
   description: 'Check wether the tera servers are online.',
   // usage: '[platform|region] [platform|region]',
   execute(message, args) {
-    const embed = new RichEmbed().setColor(3447003).setDescription('Tera Server Status (NA)');
+    const embed = new MessageEmbed().setColor(3447003).setDescription('Tera Server Status (NA)');
     const start = Date.now();
     log.info('[Tera/Status] Probing...');
 

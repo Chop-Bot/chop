@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const log = require('../../config/log');
 const parseUrl = require('../../services/tera-general/parseUrl');
@@ -17,7 +17,7 @@ module.exports = {
     const filtered = parseFilter([args[0]]);
     const news = await fetchNews(filtered ? filtered[0] : 'ALL');
 
-    const embed = new RichEmbed();
+    const embed = new MessageEmbed();
 
     embed.setDescription('**Latest Tera News (NA)**');
 

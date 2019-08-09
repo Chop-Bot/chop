@@ -20,8 +20,9 @@ module.exports = {
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
     'no-shadow': [
       'error',
-      { builtinGlobals: true, allow: ['resolve', 'reject', 'done', 'cb', '_', 'i'] },
+      { builtinGlobals: true, allow: ['resolve', 'reject', 'done', 'cb', '_', 'i', 'name'] },
     ],
     'prefer-destructuring': 'off',
+    'import/no-dynamic-require': 'off',
   },
 };

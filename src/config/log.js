@@ -32,4 +32,9 @@ prefix.apply(log.getLogger('critical'), {
   },
 });
 
+log.info(
+  '[Log] Logging level set to',
+  `${['Trace', 'Debug', 'Info', 'Warn', 'Error', 'Silent'][log.getLevel()]}.`,
+);
+
 module.exports = log;

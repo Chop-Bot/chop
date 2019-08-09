@@ -4,6 +4,7 @@ const Discord = require('discord.js');
 const Command = require('discordjs-command');
 
 const log = require('./config/log');
+const logError = require('./util/logError');
 const commandConfig = require('./config/command');
 const events = require('./events');
 
@@ -12,6 +13,10 @@ module.exports = function bot() {
 
   client.on('ready', () => {
     log.info(`[Discord] It's coffee time! [${client.user.tag}]`);
+  });
+
+  client.on('error', (err) => {
+    logError('[Discord] A discord error happened.', err);
   });
 
   const commands = new Command(client, commandConfig, path.join(__dirname, 'commands'));

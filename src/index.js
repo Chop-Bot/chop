@@ -1,11 +1,16 @@
-require('dotenv').config();
+require('./config/environment');
 const log = require('./config/log');
+const db = require('./config/db');
+const cache = require('./services/cache/cache');
+const events = require('./events');
 const bot = require('./bot');
 const web = require('./web');
-const events = require('./events');
 
-bot();
-web();
+db((mongo) => {
+  log.info('[Database] MongoDB Connected.');
+  bot();
+  web();
+});
 
 events.on('kill', () => {
   process.exitCode = 0;

@@ -1,6 +1,6 @@
 require('./config/environment');
 const log = require('./config/log');
-const db = require('./config/db');
+const db = require('./services/database/db');
 const cache = require('./services/cache/cache');
 const events = require('./events');
 const bot = require('./bot');

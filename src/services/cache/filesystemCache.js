@@ -9,7 +9,6 @@ const remove = util.promisify(fs.unlink);
 const removeDir = util.promisify(fs.rmdir);
 
 const tmp = require('tmp');
-const slug = require('slug');
 
 const log = require('../../config/log');
 const events = require('../../events');

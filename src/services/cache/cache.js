@@ -1,16 +1,16 @@
-/* eslint dot-notation: "off" */
 const util = require('util');
-const path = require('path');
 
 const redis = require('redis');
 const slug = require('slug');
 
+const events = require('../../events');
 const log = require('../../config/log');
+const logError = require('../../util/logError');
 const filesystemCache = require('./filesystemCache');
 
 const CACHE_TYPE = {
-  fs: 1,
-  redis: 2,
+  FS: 1,
+  REDIS: 2,
 };
 
 const cache = {
@@ -18,7 +18,7 @@ const cache = {
   type: 0,
   ready: false,
   generateKey(input) {
-    if (this.type === CACHE_TYPE.fs) {
+    if (this.type === CACHE_TYPE.FS) {
       return `${slug(input)}.html`;
     }
     return slug(input);
@@ -31,7 +31,7 @@ let client;
 
 function pickFS() {
   cache.client = filesystemCache.createClient();
-  cache.type = CACHE_TYPE['fs'];
+  cache.type = CACHE_TYPE.FS;
   cache.ready = true;
   log.info('[Cache] FS is ready.');
 }
@@ -45,7 +45,7 @@ function pickRedis(redisClient) {
     flushall: util.promisify(redisClient.flushall),
   };
   cache.client = Object.assign(redisClient, promises);
-  cache.type = CACHE_TYPE['redis'];
+  cache.type = CACHE_TYPE.REDIS;
   cache.ready = true;
   log.info('[Cache] Redis is ready.');
 }
@@ -59,12 +59,13 @@ if (!REDIS_URI) {
     pickRedis(client);
   });
   client.on('error', (err) => {
-    log.error('[Cache] A Redis URI was configured but could not connect to the server.');
-    log.error(err.message);
-    log.error(err.stack);
+    logError('[Cache] A Redis URI was configured but could not connect to the server.', err);
     log.info('[Cache] Falling back to FS cache.');
     client.end(true);
     pickFS();
+  });
+  events.on('kill', () => {
+    client.end(true);
   });
 }
 

@@ -1,6 +1,5 @@
 module.exports = {
   env: {
-    browser: true,
     commonjs: true,
     es6: true,
     jest: true,
@@ -18,11 +17,9 @@ module.exports = {
     'linebreak-style': 'off',
     'no-unused-vars': 'warn',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
-    'no-shadow': [
-      'error',
-      { builtinGlobals: true, allow: ['resolve', 'reject', 'done', 'cb', '_', 'i', 'name'] },
-    ],
+    'no-shadow': 'error',
     'prefer-destructuring': 'off',
     'import/no-dynamic-require': 'off',
+    'class-methods-use-this': 'off',
   },
 };

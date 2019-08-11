@@ -14,13 +14,13 @@ const teraStatusSchema = new Schema({
 });
 
 teraStatusSchema.statics.getLatest = function getLatest() {
-  return this.find({})
+  return this.find()
     .sort({ date: -1 })
     .limit(1);
 };
 
 teraStatusSchema.statics.getOldest = function getOldest() {
-  return this.find({})
+  return this.find()
     .sort({ date: 1 })
     .limit(1);
 };

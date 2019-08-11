@@ -1,5 +1,14 @@
 const cheerio = require('cheerio');
-
+/*
+Parses the status page and returns:
+{ name: 'Platform Status',
+  servers: [{
+    name: 'Server Name',
+    type: 'PVP PVE',
+    status: true,
+    platform: 'Platform',
+  }], platform: 'Platform' }
+*/
 function getServerFromTR($, tr, platform) {
   const server = {
     name: '',

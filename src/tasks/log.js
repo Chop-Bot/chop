@@ -1,6 +1,6 @@
 const filesize = require('filesize');
 
-const { Task } = require('../Task');
+const Task = require('../Task');
 
 const log = require('../config/log');
 

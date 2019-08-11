@@ -5,6 +5,7 @@ const path = require('path');
 const nodeSchedule = require('node-schedule');
 const moment = require('moment');
 
+const Task = require('./Task');
 const events = require('./events');
 const log = require('./config/log');
 
@@ -29,7 +30,9 @@ class Schedule {
     this.tasks = new Map();
     const requires = getAllFiles(path.join(__dirname, 'tasks')).map(t => require(t.replace(__dirname, './')));
     requires.forEach((NewTask) => {
-      this.create(NewTask);
+      if (NewTask instanceof Task || NewTask.prototype instanceof Task) {
+        this.create(NewTask);
+      }
     });
     events.on('kill', () => {
       log.info('[Schedule] Clearing task jobs.');

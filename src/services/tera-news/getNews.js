@@ -2,6 +2,18 @@ const cheerio = require('cheerio');
 
 const log = require('../../config/log');
 
+/*
+returns an object like this:
+[
+  {
+    title: 'News Title',
+    content: 'The news short summary',
+    href: 'Relative path to the news',
+    platforms: ['PC', 'PS4', 'XBOX']
+  },
+  ...more news
+]
+*/
 function getNews(html) {
   const news = [];
   const $ = cheerio.load(html);
@@ -14,7 +26,8 @@ function getNews(html) {
       .parent()
       .parent()
       .next()
-      .text();
+      .text()
+      .trim();
     const platforms = [];
     const icons = $(el)
       .parent()
@@ -29,7 +42,10 @@ function getNews(html) {
       platforms.push('PS4');
     }
     news.push({
-      title, href, content, platforms,
+      title,
+      href,
+      content,
+      platforms,
     });
   });
   return news;

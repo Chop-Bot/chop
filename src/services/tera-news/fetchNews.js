@@ -3,7 +3,7 @@ const parseUrl = require('../tera-general/parseUrl');
 const fetchPage = require('../tera-general/fetchPage');
 const getNews = require('./getNews');
 
-async function fetchTeraNews(filter = 'ALL') {
+async function fetchTeraNews(filter = 'ALL', ignoreCache = false) {
   let route = 'all';
   if (filter === 'ALL') route = 'all';
   if (filter === 'PC') route = 'windows';
@@ -11,7 +11,11 @@ async function fetchTeraNews(filter = 'ALL') {
   if (filter === 'XBOX') route = 'xbox';
 
   try {
-    const html = await fetchPage(parseUrl(`news/categories/${route}`), 5 * 60);
+    const html = await fetchPage(
+      parseUrl(`news/categories/${route}`),
+      ignoreCache ? null : 5 * 60,
+      ignoreCache,
+    );
     const news = getNews(html);
     return news;
   } catch (err) {

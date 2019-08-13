@@ -6,6 +6,7 @@ const emoji = require('../../util/randomEmoji');
 
 // TODO: Fetch these on the fly if user picks 🛰 Notifications
 const defaultServers = ['Velika', 'Kaiator', 'Darkan', 'Meldita', 'Lakan', 'Yana'];
+const defaultPlatforms = ['PC', 'PS4', 'XBOX'];
 
 const tryToDeleteMessage = (message) => {
   try {
@@ -71,7 +72,6 @@ const configureTeraStatusNotifications = async (message) => {
     return;
   }
   if (!thisGuildNotification) {
-    // add new
     await Notification.createByType(message.guild.id, 'status', {
       notify: true,
       servers: defaultServers,
@@ -98,10 +98,54 @@ const configureTeraStatusNotifications = async (message) => {
   );
 };
 
+const configureTeraNewsNotifications = async (message) => {
+  // Configure Tera Status Notification
+  const thisGuildNotification = await Notification.findOneByGuild(message.guild.id);
+  const chosenChannel = await pickChannel(
+    message,
+    thisGuildNotification && thisGuildNotification.teraNews.notify
+      ? thisGuildNotification.teraNews.channel
+      : null,
+  );
+  if (!chosenChannel) {
+    await Notification.disableByType(message.guild.id, 'news');
+    await message.channel.send('You will no longer receive Tera News notifications.');
+    return;
+  }
+  if (chosenChannel === 'CANCEL') {
+    return;
+  }
+  if (!thisGuildNotification) {
+    await Notification.createByType(message.guild.id, 'news', {
+      notify: true,
+      platforms: defaultPlatforms,
+      channel: chosenChannel.id,
+    });
+  } else {
+    await Notification.findAndUpdateNews(message.guild.id, {
+      notify: true,
+      platforms: defaultPlatforms,
+      channel: chosenChannel.id,
+    });
+  }
+
+  // done!
+  log.info(
+    '[Configure]',
+    message.author.tag,
+    'configured the guild',
+    message.guild.name,
+    'to receive Tera News notifications!',
+  );
+  await message.channel.send(
+    `You configured the channel <#${chosenChannel.id}> to receive Tera News notifications.`,
+  );
+};
+
 const configureNotifications = async (message) => {
   const notificationOptions = new Map([
     ['🔋', { label: 'Tera Status', handle: configureTeraStatusNotifications }],
-    // ['📰', { label: 'Tera News', handle: configureTeraNewsNotifications }],
+    ['📰', { label: 'Tera News', handle: configureTeraNewsNotifications }],
   ]);
   await configurationPromptAndHandle(
     notificationOptions,

@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+// change this to -> { guild, type, subjects, notify, channel }
+// type -> status or news
+// subjects -> the servers/platforms to watch
 const notificationSchema = new Schema({
   guild: { type: String, required: true, unique: true },
   teraStatus: {
@@ -57,14 +60,18 @@ notificationSchema.methods.updateByNews = function updateByNews({ notify, platfo
 };
 
 /* Getters */
-notificationSchema.statics.statusByServers = function statusByServer(servers) {
+notificationSchema.statics.statusByServers = function statusByServers(servers) {
   const q = servers.map(s => ({ 'teraStatus.servers': s }));
   return this.find({ 'teraStatus.notify': true }).or(q);
 };
 
-notificationSchema.statics.newsByPlatforms = function newsByPlatform(platforms) {
+notificationSchema.statics.newsByPlatforms = function newsByPlatforms(platforms) {
   const q = platforms.map(s => ({ 'teraNews.platforms': s }));
   return this.find({ 'teraNews.notify': true }).or(q);
+};
+
+notificationSchema.statics.guildsWithNewsNotifications = function guildsWithNewsNotifications() {
+  return this.find({ 'teraNews.notify': true });
 };
 
 notificationSchema.statics.findOneByGuild = function findByGuild(guild) {

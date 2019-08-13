@@ -32,8 +32,8 @@ module.exports = function bot() {
   client
     .login(process.env.TOKEN)
     .then(() => log.info('[Discord] Log in successful.'))
-    .catch(() => {
-      log.getLogger('critical').error('[Discord] Could not login to Discord. Exiting...');
+    .catch((err) => {
+      logError('[Discord] Could not login to Discord. Exiting...', err, true);
       process.exit(1);
     });
 };

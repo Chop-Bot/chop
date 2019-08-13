@@ -6,9 +6,28 @@ module.exports = {
   hidden: true,
   async execute(message, args) {
     const possibleId = args[0];
-    const possibleChannel = message.guild.channels.get(possibleId);
-    if (possibleChannel) {
-      possibleChannel
+    const possibleChannelById = message.guild.channels.get(possibleId);
+    const possibleMention = args[0] && args[0].match(/^(?:<#)?(\d{17,19})>?$/);
+    const possibleChannelByMention = possibleMention
+      ? message.guild.channels.get(possibleMention[1])
+      : null;
+    if (possibleChannelById) {
+      possibleChannelById
+        .send('Beep')
+        .then((msg) => {
+          setTimeout(
+            () => msg
+              .delete()
+              .then(
+                () => message.channel.send('Success!'),
+                () => message.channel.send('Oof, could not delete. :('),
+              ),
+            3000,
+          );
+        })
+        .catch(() => message.channel.send('Oof, could not send. :('));
+    } else if (possibleChannelByMention) {
+      possibleChannelByMention
         .send('Beep')
         .then((msg) => {
           setTimeout(

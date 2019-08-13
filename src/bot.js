@@ -29,5 +29,11 @@ module.exports = function bot() {
 
   events.on('kill', () => client.destroy());
 
-  client.login(process.env.TOKEN);
+  client
+    .login(process.env.TOKEN)
+    .then(() => log.info('[Discord] Log in successful.'))
+    .catch(() => {
+      log.getLogger('critical').error('[Discord] Could not login to Discord. Exiting...');
+      process.exit(1);
+    });
 };

@@ -17,7 +17,7 @@ module.exports = {
     'linebreak-style': 'off',
     'no-unused-vars': 'warn',
     'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
-    'no-shadow': 'error',
+    'no-shadow': ['error', { allow: ['_'] }],
     'prefer-destructuring': 'off',
     'import/no-dynamic-require': 'off',
     'class-methods-use-this': 'off',

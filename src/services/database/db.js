@@ -4,6 +4,10 @@ const logError = require('../../util/logError');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+
 function connect(cb) {
   mongoose
     .connect(MONGODB_URI, { useNewUrlParser: true })

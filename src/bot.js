@@ -8,9 +8,12 @@ const logError = require('./util/logError');
 const commandConfig = require('./config/command');
 const events = require('./events');
 const startSchedule = require('./Schedule');
+const TwitterClient = require('./services/twitter/TwitterClient');
 
 module.exports = function bot() {
   const client = new Discord.Client();
+
+  Object.defineProperty(client, 'twitter', { value: new TwitterClient(), writable: false });
 
   client.on('ready', () => {
     startSchedule(client);

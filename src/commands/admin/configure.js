@@ -3,10 +3,22 @@ const Notification = require('../../models/notification');
 const getVisibleChannels = require('../../services/discord/getVisibleChannels');
 const configurationPromptAndHandle = require('../../services/discord/configurationPromptAndHandle');
 const emoji = require('../../util/randomEmoji');
+const cap = require('../../util/cap');
 
 // TODO: Fetch these on the fly if user picks 🛰 Notifications
-const defaultServers = ['Velika', 'Kaiator', 'Darkan', 'Meldita', 'Lakan', 'Yana'];
-const defaultPlatforms = ['PC', 'PS4', 'XBOX'];
+const defaults = (type) => {
+  switch (type) {
+    case 'news':
+      return ['PC', 'PS4', 'XBOX'];
+    case 'status':
+      return ['Velika', 'Kaiator', 'Darkan', 'Meldita', 'Lakan', 'Yana'];
+    case 'twitter':
+      return ['NA'];
+    default:
+      // ????
+      return [];
+  }
+};
 
 const tryToDeleteMessage = (message) => {
   try {
@@ -54,34 +66,43 @@ const pickChannel = async (message, currentChannelInDb) => {
   return channelResponse;
 };
 
-const configureTeraStatusNotifications = async (message) => {
+const configureNotifications = async (message, type) => {
+  const guild = message.guild.id;
   // Configure Tera Status Notification
-  const thisGuildNotification = await Notification.findOneByGuild(message.guild.id);
+  const thisGuildNotification = await Notification.findOneByGuildAndType({
+    guild,
+    type,
+  });
   const chosenChannel = await pickChannel(
     message,
-    thisGuildNotification && thisGuildNotification.teraStatus.notify
-      ? thisGuildNotification.teraStatus.channel
-      : null,
+    thisGuildNotification ? thisGuildNotification.channel : null,
   );
+  // if chosenChannel === null user chose remove notifications
   if (!chosenChannel) {
-    await Notification.disableByType(message.guild.id, 'status');
-    await message.channel.send('You will no longer receive Tera Status change notifications.');
+    await thisGuildNotification.deleteOne();
+    await message.channel.send(`You will no longer receive Tera ${cap(type)} notifications.`);
     return;
   }
+  // if chosenChannel === 'CANCEL' user chose cancel or timed out
   if (chosenChannel === 'CANCEL') {
     return;
   }
+  // user chose a channel, save it to db
   if (!thisGuildNotification) {
-    await Notification.createByType(message.guild.id, 'status', {
-      notify: true,
-      servers: defaultServers,
+    await Notification.createNotification({
+      guild,
+      type,
+      subject: defaults(type),
       channel: chosenChannel.id,
     });
   } else {
-    await Notification.findAndUpdateStatus(message.guild.id, {
-      notify: true,
-      servers: defaultServers,
-      channel: chosenChannel.id,
+    await Notification.findAndUpdateNews({
+      guild,
+      type,
+      newInfo: {
+        subject: defaults(type),
+        channel: chosenChannel.id,
+      },
     });
   }
 
@@ -91,61 +112,20 @@ const configureTeraStatusNotifications = async (message) => {
     message.author.tag,
     'configured the guild',
     message.guild.name,
-    'to receive notifications!',
+    'to receive Tera',
+    cap(type),
+    'notifications!',
   );
   await message.channel.send(
-    `You configured the channel <#${chosenChannel.id}> to receive Tera Status notifications.`,
+    `You configured the channel <#${chosenChannel.id}> to receive Tera ${cap(type)} notifications.`,
   );
 };
 
-const configureTeraNewsNotifications = async (message) => {
-  // Configure Tera Status Notification
-  const thisGuildNotification = await Notification.findOneByGuild(message.guild.id);
-  const chosenChannel = await pickChannel(
-    message,
-    thisGuildNotification && thisGuildNotification.teraNews.notify
-      ? thisGuildNotification.teraNews.channel
-      : null,
-  );
-  if (!chosenChannel) {
-    await Notification.disableByType(message.guild.id, 'news');
-    await message.channel.send('You will no longer receive Tera News notifications.');
-    return;
-  }
-  if (chosenChannel === 'CANCEL') {
-    return;
-  }
-  if (!thisGuildNotification) {
-    await Notification.createByType(message.guild.id, 'news', {
-      notify: true,
-      platforms: defaultPlatforms,
-      channel: chosenChannel.id,
-    });
-  } else {
-    await Notification.findAndUpdateNews(message.guild.id, {
-      notify: true,
-      platforms: defaultPlatforms,
-      channel: chosenChannel.id,
-    });
-  }
-
-  // done!
-  log.info(
-    '[Configure]',
-    message.author.tag,
-    'configured the guild',
-    message.guild.name,
-    'to receive Tera News notifications!',
-  );
-  await message.channel.send(
-    `You configured the channel <#${chosenChannel.id}> to receive Tera News notifications.`,
-  );
-};
-
-const configureNotifications = async (message) => {
+const configureNewNotification = async (message) => {
   const notificationOptions = new Map([
-    ['🔋', { label: 'Tera Status', handle: configureTeraStatusNotifications }],
-    ['📰', { label: 'Tera News', handle: configureTeraNewsNotifications }],
+    ['🔋', { label: 'Tera Status', handle: async msg => configureNotifications(msg, 'status') }],
+    ['📰', { label: 'Tera News', handle: async msg => configureNotifications(msg, 'news') }],
+    ['🐦', { label: 'Tera Tweets', handle: async msg => configureNotifications(msg, 'twitter') }],
   ]);
   await configurationPromptAndHandle(
     notificationOptions,
@@ -160,7 +140,7 @@ module.exports = {
   admin: true,
   execute: async (message) => {
     const configOptions = new Map([
-      ['🛰', { label: 'notifications', handle: configureNotifications }],
+      ['🛰', { label: 'notifications', handle: configureNewNotification }],
       // ['👌', 'placeholder'],
     ]);
 

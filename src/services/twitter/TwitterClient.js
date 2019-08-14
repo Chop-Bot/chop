@@ -30,6 +30,24 @@ class TwitterClient {
       );
     });
   }
+
+  getLatestTeraTweetID() {
+    return new Promise((resolve, reject) => {
+      this.client.get(
+        'statuses/user_timeline',
+        { ...this.DEFAULT_PARAMS, count: 1 },
+        (error, [tweets], response) => {
+          if (error) {
+            logError('[Twitter] Could not retrieve latest Tera Tweet.', error);
+            reject(error);
+            return;
+          }
+          // TODO: Save this to cache in case somone decides to spam the twitter command
+          resolve(tweets.id_str);
+        },
+      );
+    });
+  }
 }
 
 module.exports = TwitterClient;

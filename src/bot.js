@@ -1,7 +1,7 @@
 const path = require('path');
 
 const Discord = require('discord.js');
-const Command = require('discordjs-command');
+const CommandSystem = require('discordjs-command');
 
 const log = require('./config/log');
 const logError = require('./util/logError');
@@ -24,7 +24,7 @@ module.exports = function bot() {
     logError('[Discord] A discord error happened.', err);
   });
 
-  const commands = new Command(client, commandConfig, path.join(__dirname, 'commands'));
+  const commands = new CommandSystem(client, commandConfig, path.join(__dirname, 'commands'));
 
   commands.ListenForCommands((cmds) => {
     log.info(`[Commands] ${cmds.size} commands loaded.`);

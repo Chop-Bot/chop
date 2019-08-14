@@ -11,31 +11,6 @@ const fetchPage = require('../services/tera-general/fetchPage');
 const buildEmbed = require('../services/tera-news/buildEmbed');
 const getSummary = require('../services/tera-news/getSummary');
 
-const hasDifference = (oldPost, newPost) => {
-  const sameTitle = oldPost.title === newPost.title;
-  const sameLink = oldPost.href === newPost.href;
-  return !sameTitle || !sameLink;
-};
-
-const getCurrentAndOldNews = async () => {
-  let current = null;
-  try {
-    current = await fetchNews(null, true);
-    // current = await fetchFakeNews();
-  } catch (err) {
-    logError('[Task/CheckNews] Failed to fetch current news.', err);
-  }
-  let old = null;
-  try {
-    // TODO: Do the same in checkTeraStatus
-    const latestDbEntry = await TeraNews.getLatest();
-    old = latestDbEntry[0].news;
-  } catch (err) {
-    logError('[Task/CheckNews] Failed to get old news from db.', err);
-  }
-  return [current, old];
-};
-
 module.exports = class extends Task {
   constructor() {
     // check tera news every 30 seconds
@@ -44,11 +19,11 @@ module.exports = class extends Task {
 
   async run() {
     // get current and old posts, return if it fails
-    const [currentNews, oldNews] = await getCurrentAndOldNews();
+    const [currentNews, oldNews] = await this.getCurrentAndOldNews();
     if (!currentNews || !oldNews) return;
 
     // check if the latest post is different, return if not
-    const isThereANewPost = hasDifference(oldNews[0], currentNews[0]);
+    const isThereANewPost = this.hasDifference(oldNews[0], currentNews[0]);
     if (!isThereANewPost) return;
     log.info('[Task/CheckNews] New post detected, preparing to notify.');
 
@@ -56,8 +31,11 @@ module.exports = class extends Task {
 
     // get the guilds that want notification for changed servers in a Map<guildId, channelId>
     const guildsToNotify = new Map();
-    const notificationSettings = await Notification.guildsWithNewsNotifications();
-    notificationSettings.forEach(n => guildsToNotify.set(n.guild, n.teraNews.channel));
+    const notificationsInDb = await Notification.findAllBySubjects(
+      currentNews[0].platforms,
+      'news',
+    );
+    notificationsInDb.forEach(n => guildsToNotify.set(n.guild, n.channel));
     log.info(`[Task/CheckNews] Found ${guildsToNotify.size} guilds to notify.`);
 
     // send notifications
@@ -99,5 +77,30 @@ module.exports = class extends Task {
     });
     await updatedNews.save();
     // done.
+  }
+
+  hasDifference(oldPost, newPost) {
+    const sameTitle = oldPost.title === newPost.title;
+    const sameLink = oldPost.href === newPost.href;
+    return !sameTitle || !sameLink;
+  }
+
+  async getCurrentAndOldNews() {
+    let current = null;
+    try {
+      current = await fetchNews(null, true);
+      // current = await fetchFakeNews();
+    } catch (err) {
+      logError('[Task/CheckNews] Failed to fetch current news.', err);
+    }
+    let old = null;
+    try {
+      // TODO: Do the same in checkTeraStatus
+      const latestDbEntry = await TeraNews.getLatest();
+      old = latestDbEntry[0].news;
+    } catch (err) {
+      logError('[Task/CheckNews] Failed to get old news from db.', err);
+    }
+    return [current, old];
   }
 };

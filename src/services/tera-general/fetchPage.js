@@ -3,11 +3,11 @@ const request = require('request-promise-native');
 const log = require('../../config/log');
 const cache = require('../cache/cache');
 
-async function fetchTeraPage(url, cacheTime = 0, ignoreCache = false) {
+async function fetchTeraPage(url, cacheTime = 0, ignoreCached = false) {
   let html;
   try {
     const key = cache.generateKey(url);
-    if (!ignoreCache) {
+    if (!ignoreCached) {
       const cachedData = await cache.client.get(key);
       if (cachedData) {
         log.debug('[Tera/FetchPage] Returning cached data.', key);

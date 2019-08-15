@@ -1,7 +1,5 @@
 const cheerio = require('cheerio');
 
-const log = require('../../config/log');
-
 /*
 returns an object like this:
 [

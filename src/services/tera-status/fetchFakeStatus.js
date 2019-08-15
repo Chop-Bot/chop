@@ -9,7 +9,7 @@ async function fetchTeraStatus() {
     const statuses = getStatus(html);
     return statuses;
   } catch (err) {
-    log.error('[Tera/Status] Failed to fetch tera status.', err.message);
+    log.error('[Tera/Status] Failed to fetch fake tera status.', err.message);
     throw err;
   }
 }

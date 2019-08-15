@@ -12,6 +12,7 @@ const parseUrl = require('../tera-general/parseUrl');
  * @param {String[]} post.platforms Post platforms, can only be `PC`, `PS4`, `XBOX`
  * @param {String[]} post.topics A list of topics in the post
  * @param {String} post.img Absolute url to the image of the post
+ * @returns {external:MessageEmbed} A new MessageEmbed
  */
 function buildEmbed(post) {
   const embed = new MessageEmbed().setColor(3447003).setDescription('Tera News (NA)');

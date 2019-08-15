@@ -41,6 +41,7 @@ module.exports = class extends Task {
       const channel = guild.channels.get(channelId);
       if (!channel) return;
       // crawl the post page and get info about it
+      // FIXME: This will throw if the bot lacks embed permissions
       channel.send(newTweet);
       sent += 1;
     });

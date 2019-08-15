@@ -42,6 +42,7 @@ module.exports = class extends Task {
       if (!channel) return;
       const embed = buildEmbed(currentStatus);
       try {
+        // FIXME: This will throw if the bot lacks embed permissions
         channel.send(embed);
         notificationsSent += 1;
       } catch (e) {

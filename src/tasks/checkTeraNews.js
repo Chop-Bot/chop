@@ -50,6 +50,7 @@ module.exports = class extends Task {
           const postSummary = getSummary(html);
           const embed = buildEmbed({ ...newPost, ...postSummary });
           try {
+            // FIXME: This will throw if the bot lacks embed permissions
             channel.send(embed);
           } catch (e) {
             log.error(
@@ -80,9 +81,10 @@ module.exports = class extends Task {
   }
 
   hasDifference(oldPost, newPost) {
-    const sameTitle = oldPost.title === newPost.title;
+    // Don't check by title because chop got it in a different language once
+    // const sameTitle = oldPost.title === newPost.title;
     const sameLink = oldPost.href === newPost.href;
-    return !sameTitle || !sameLink;
+    return !sameLink;
   }
 
   async getCurrentAndOldNews() {

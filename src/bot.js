@@ -1,22 +1,17 @@
-const path = require('path');
-
-const Discord = require('discord.js');
-const CommandSystem = require('discordjs-command');
+const ChopTools = require('chop-tools');
 
 const log = require('./config/log');
 const logError = require('./util/logError');
-const commandConfig = require('./config/command');
 const events = require('./events');
-const startSchedule = require('./Schedule');
+const getOrCreateProfile = require('./services/profiles/getOrCreateProfile');
 const TwitterClient = require('./services/twitter/TwitterClient');
 
 module.exports = function bot() {
-  const client = new Discord.Client();
+  const client = new ChopTools.Client();
 
   Object.defineProperty(client, 'twitter', { value: new TwitterClient(), writable: false });
 
   client.on('ready', () => {
-    startSchedule(client);
     log.info(`[Discord] It's coffee time! [${client.user.tag}]`);
   });
 
@@ -24,10 +19,14 @@ module.exports = function bot() {
     logError('[Discord] A discord error happened.', err);
   });
 
-  const commands = new CommandSystem(client, commandConfig, path.join(__dirname, 'commands'));
-
-  commands.ListenForCommands((cmds) => {
-    log.info(`[Commands] ${cmds.size} commands loaded.`);
+  client.use(async (call, next) => {
+    getOrCreateProfile(call.caller)
+      .then((profile) => {
+        call.profile = profile;
+        log.info(`[Profile] Created profile for ${call.callerTag}`);
+        next();
+      })
+      .catch(() => {});
   });
 
   events.on('kill', () => client.destroy());

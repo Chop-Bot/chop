@@ -1,9 +1,11 @@
+const { Command } = require('chop-tools');
+
 const { prefix, dmHelp } = require('../config/command');
 
-module.exports = {
+module.exports = new Command({
   name: 'help',
   description: 'Let me help you!',
-  execute: (message, args) => {
+  run: (message, args) => {
     if (args[0]) {
       if (message.client.commands.has(args[0])) {
         const data = [];
@@ -52,4 +54,4 @@ module.exports = {
     }
     return message.channel.send(data, { split: true });
   },
-};
+});

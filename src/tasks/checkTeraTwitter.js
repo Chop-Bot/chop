@@ -1,4 +1,4 @@
-const Task = require('../Task');
+const { Task } = require('chop-tools');
 
 const log = require('../config/log');
 const logError = require('../util/logError');

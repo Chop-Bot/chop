@@ -1,4 +1,4 @@
-const Task = require('../Task');
+const { Task } = require('chop-tools');
 
 const log = require('../config/log');
 const logError = require('../util/logError');
@@ -43,7 +43,7 @@ module.exports = class extends Task {
       const embed = buildEmbed(currentStatus);
       try {
         // FIXME: This will throw if the bot lacks embed permissions
-        channel.send(embed);
+        channel.send({ embed });
         notificationsSent += 1;
       } catch (e) {
         log.error(

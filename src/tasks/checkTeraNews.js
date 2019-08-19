@@ -1,4 +1,4 @@
-const Task = require('../Task');
+const { Task } = require('chop-tools');
 
 const log = require('../config/log');
 const logError = require('../util/logError');
@@ -51,7 +51,7 @@ module.exports = class extends Task {
           const embed = buildEmbed({ ...newPost, ...postSummary });
           try {
             // FIXME: This will throw if the bot lacks embed permissions
-            channel.send(embed);
+            channel.send({ embed });
           } catch (e) {
             log.error(
               "[Task/CheckNews] Couldn't notify the guild",

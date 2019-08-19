@@ -1,3 +1,4 @@
+const { Command } = require('chop-tools');
 const { MessageEmbed } = require('discord.js');
 
 const log = require('../../config/log');
@@ -6,11 +7,11 @@ const fetchNews = require('../../services/tera-news/fetchNews');
 const parseFilter = require('../../services/tera-news/parseFilter');
 const getNewsEmojis = require('../../services/tera-news/getNewsEmojis');
 
-module.exports = {
+module.exports = new Command({
   name: 'news',
   description: 'Fetch the latest tera news.',
   usage: '[filter]',
-  execute: async (message, args) => {
+  run: async (message, args) => {
     const start = Date.now();
     log.debug('[Tera/News] Fetching news...');
 
@@ -24,13 +25,13 @@ module.exports = {
     news.forEach((n) => {
       embed.addField(
         `${getNewsEmojis(n.platforms)} ${n.title}`,
-        `${n.content}[:small_blue_diamond:Read More](${parseUrl(n.href)})\n`,
+        `${n.content}\n[:small_blue_diamond:Read More](${parseUrl(n.href)})\n`,
       );
     });
 
     // log.debug('[Tera/News] News fetched:', JSON.stringify(news));
     log.debug('[Tera/News] Done! Finished in', Date.now() - start, 'ms');
 
-    message.channel.send(embed);
+    message.channel.send({ embed });
   },
-};
+});

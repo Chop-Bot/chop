@@ -1,3 +1,5 @@
+const { Command } = require('chop-tools');
+
 const log = require('../../config/log');
 const Notification = require('../../models/notification');
 const getVisibleChannels = require('../../services/discord/getVisibleChannels');
@@ -134,11 +136,11 @@ const configureNewNotification = async (message) => {
   );
 };
 
-module.exports = {
+module.exports = new Command({
   name: 'configure',
   description: 'Command for server moderators to configure Chop Bot.',
   admin: true,
-  execute: async (message) => {
+  run: async (message) => {
     const configOptions = new Map([
       ['🛰', { label: 'notifications', handle: configureNewNotification }],
       // ['👌', 'placeholder'],
@@ -148,4 +150,4 @@ module.exports = {
 
     await tryToDeleteMessage(message);
   },
-};
+});

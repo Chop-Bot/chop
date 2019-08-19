@@ -1,12 +1,14 @@
+const { Command } = require('chop-tools');
+
 const log = require('../../config/log');
 const fetchStatus = require('../../services/tera-status/fetchStatus');
 const TeraStatus = require('../../models/teraStatus');
 
-module.exports = {
+module.exports = new Command({
   name: 'savestatus',
   description: 'Saves the current tera status to the database. (For Development)',
   hidden: true,
-  execute: async (message) => {
+  run: async (message) => {
     const statuses = await fetchStatus();
     log.debug('Tera status:', JSON.stringify(statuses));
     const ts = new TeraStatus({
@@ -16,4 +18,4 @@ module.exports = {
     await ts.save();
     message.channel.send('Done!');
   },
-};
+});

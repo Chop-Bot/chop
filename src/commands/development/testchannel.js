@@ -1,10 +1,10 @@
-const log = require('../../config/log');
+const { Command } = require('chop-tools');
 
-module.exports = {
+module.exports = new Command({
   name: 'test-channel',
   description: 'Makes Chop send a message to a specific channel to see if it can.',
   hidden: true,
-  async execute(message, args) {
+  async run(message, args) {
     const possibleId = args[0];
     const possibleChannelById = message.guild.channels.get(possibleId);
     const possibleMention = args[0] && args[0].match(/^(?:<#)?(\d{17,19})>?$/);
@@ -45,4 +45,4 @@ module.exports = {
       message.channel.send('Could not find that channel');
     }
   },
-};
+});

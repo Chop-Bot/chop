@@ -1,6 +1,6 @@
-const filesize = require('filesize');
+const { Task } = require('chop-tools');
 
-const Task = require('../Task');
+const filesize = require('filesize');
 
 const log = require('../config/log');
 

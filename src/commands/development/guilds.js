@@ -1,9 +1,11 @@
-module.exports = {
+const { Command } = require('chop-tools');
+
+module.exports = new Command({
   name: 'guilds',
   description: 'List the guilds the bot is in.',
   hidden: true,
   admin: true,
-  execute(message, args) {
-    message.client.guilds.map(g => message.channel.send(g.name));
+  run(message, args) {
+    this.client.guilds.map(g => message.channel.send(g.name));
   },
-};
+});

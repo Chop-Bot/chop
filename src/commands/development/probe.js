@@ -4,18 +4,19 @@ const util = require('util');
 
 const writeFile = util.promisify(fs.writeFile);
 
+const { Command } = require('chop-tools');
 const slug = require('slug');
 
 const log = require('../../config/log');
 const parseUrl = require('../../services/tera-general/parseUrl');
 const fetchPage = require('../../services/tera-general/fetchPage');
 
-module.exports = {
+module.exports = new Command({
   name: 'probe',
   description: 'Probes the tera website at the specified endpoint',
   hidden: true,
   usage: '[endpoint]',
-  execute(message, args) {
+  run(message, args) {
     const url = parseUrl(args[0]);
 
     const start = Date.now();
@@ -31,4 +32,4 @@ module.exports = {
       })
       .catch(log.error);
   },
-};
+});

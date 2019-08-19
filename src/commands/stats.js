@@ -1,9 +1,10 @@
+const { Command } = require('chop-tools');
 const { MessageEmbed } = require('discord.js');
 
-module.exports = {
+module.exports = new Command({
   name: 'info',
-  description: 'Show some stats about Voice.',
-  execute(message) {
+  description: 'Show some stats about Chop.',
+  run(message) {
     const guilds = message.client.guilds.size;
     const users = message.client.users.size;
     const uptime = message.client.uptime;
@@ -45,6 +46,6 @@ module.exports = {
       ],
     };
     const embed = new MessageEmbed(embedData);
-    message.channel.send(embed);
+    message.channel.send({ embed });
   },
-};
+});

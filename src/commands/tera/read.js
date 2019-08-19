@@ -1,6 +1,6 @@
+const { Command } = require('chop-tools');
 const { MessageEmbed } = require('discord.js');
 
-const log = require('../../config/log');
 const parseUrl = require('../../services/tera-general/parseUrl');
 const fetchNews = require('../../services/tera-news/fetchNews');
 const getSummary = require('../../services/tera-news/getSummary');
@@ -25,12 +25,12 @@ const isValidOrder = (input, len) => {
   return true;
 };
 
-module.exports = {
+module.exports = new Command({
   name: 'read',
   description: 'Reads the summary of a tera news post.',
   usage: '[order|platform] [order] \nExample: `chop read 1´ or `chop read pc 3`',
   cooldown: 5,
-  execute: async (message, args) => {
+  run: async (message, args) => {
     const filtered = parseFilter([args[0]]);
     const news = await fetchNews(filtered ? filtered[0] : 'ALL');
 
@@ -55,7 +55,7 @@ module.exports = {
         embed.addField('Summary', newsSummary);
       }
       embed.setImage(summary.img);
-      message.channel.send(embed);
+      message.channel.send({ embed });
     });
   },
-};
+});

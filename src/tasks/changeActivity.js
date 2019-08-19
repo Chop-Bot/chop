@@ -17,8 +17,8 @@ module.exports = class extends Task {
     const pick = options[Math.floor(Math.random() * options.length)];
     try {
       this.client.user.setActivity(pick[0], pick[1]);
-    } catch (err) {
-      logError('[Task/Activity] Could not change activity.', err);
+    } catch {
+      /* First time will throw because bot isn't up yet */
     }
   }
 };

@@ -11,7 +11,6 @@ module.exports = new Command({
   aliases: ['rep'],
   usage: '[@mention]',
   async run(message, args, call) {
-    log.info(call.profile);
     const mention = message.mentions.members.first();
     if (!mention || (mention && mention.user.id === call.caller)) {
       message.channel.send(

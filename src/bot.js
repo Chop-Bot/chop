@@ -23,7 +23,6 @@ module.exports = function bot() {
     getOrCreateProfile(call.caller)
       .then((profile) => {
         call.profile = profile;
-        log.info(`[Profile] Created profile for ${call.callerTag}`);
         next();
       })
       .catch(() => {});

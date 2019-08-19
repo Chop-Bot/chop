@@ -22,5 +22,6 @@ module.exports = {
     'import/no-dynamic-require': 'off',
     'class-methods-use-this': 'off',
     'no-use-before-define': ['error', { functions: false }],
+    'no-param-reassign': 'off',
   },
 };

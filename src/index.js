@@ -25,3 +25,6 @@ events.on('kill', () => {
 
 process.on('SIGTERM', () => events.emit('kill'));
 process.on('SIGINT', () => events.emit('kill'));
+process.on('uncaughtException', (err, origin) => {
+  log.getLogger('critical').error('Uncaught Exception!', err, 'Origin:', origin);
+});

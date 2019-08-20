@@ -36,10 +36,19 @@ class TwitterClient {
       this.client.get(
         'statuses/user_timeline',
         { ...this.DEFAULT_PARAMS, count: 1 },
-        (error, [tweets], response) => {
+        (error, tweets, response) => {
           if (error) {
             logError('[Twitter] Could not retrieve latest Tera Tweet.', error);
             reject(error);
+            return;
+          }
+          let tweet;
+          try {
+            tweet = tweets[0];
+          } catch {
+            const err = new Error(`Could not read tweets from: ${tweet}`);
+            logError('[Twitter] Could not retrieve latest Tera Tweet.', err);
+            reject(err);
             return;
           }
           // TODO: Save this to cache in case somone decides to spam the twitter command

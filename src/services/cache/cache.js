@@ -59,8 +59,8 @@ if (!REDIS_URI) {
     pickRedis(client);
   });
   client.on('error', (err) => {
-    logError('[Cache] A Redis URI was configured but could not connect to the server.', err);
-    log.info('[Cache] Falling back to FS cache.');
+    // logError('[Cache] A Redis URI was configured but could not connect to the server.', err);
+    log.warn('[Cache] Could not connect to redis. Falling back to FS cache.');
     client.end(true);
     pickFS();
   });

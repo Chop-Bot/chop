@@ -14,7 +14,7 @@ function connect(cb) {
     .then(cb, (err) => {
       logError('[Database] Could not connect to database!', err, true);
     })
-    .catch((err) => {
+    .catch(() => {
       process.exit(1);
     });
 }

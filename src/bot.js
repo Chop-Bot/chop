@@ -3,7 +3,7 @@ const ChopTools = require('chop-tools');
 const log = require('./config/log');
 const logError = require('./util/logError');
 const events = require('./events');
-const getOrCreateProfile = require('./services/profiles/getOrCreateProfile');
+const Profile = require('./models/profile');
 const TwitterClient = require('./services/twitter/TwitterClient');
 
 module.exports = function bot() {
@@ -20,7 +20,7 @@ module.exports = function bot() {
   });
 
   client.use(async (call, next) => {
-    getOrCreateProfile(call.caller)
+    Profile.getOrCreate(call.caller)
       .then((profile) => {
         call.profile = profile;
         next();

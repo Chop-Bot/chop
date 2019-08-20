@@ -1,11 +1,9 @@
 const { Command } = require('chop-tools');
 
-const { prefix, dmHelp } = require('../config/command');
-
 module.exports = new Command({
   name: 'help',
   description: 'Let me help you!',
-  run: (message, args) => {
+  run(message, args) {
     if (args[0]) {
       if (message.client.commands.has(args[0])) {
         const data = [];
@@ -24,7 +22,7 @@ module.exports = new Command({
           data.push(`**Description:** ${command.description}`);
         }
         if (command.usage) {
-          data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+          data.push(`**Usage:** ${this.client.options.prefix}${command.name} ${command.usage}`);
         }
 
         data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
@@ -41,12 +39,16 @@ module.exports = new Command({
       const isAdmin = message.member.hasPermission('ADMINISTRATOR', false, true, true);
       // command is an array ['command name', commandObject]
       if (!(command[1].hidden || (command[1].hidden && !isAdmin))) {
-        data.push(`**${prefix}${command[1].name}:** ${command[1].description}`);
+        data.push(`**${this.client.options.prefix}${command[1].name}:** ${command[1].description}`);
       }
     }
-    data.push(`You can use \`${prefix}help [command name]\` to know more about a command.`);
+    data.push(
+      `You can use \`${
+        this.client.options.prefix
+      }help [command name]\` to know more about a command.`,
+    );
 
-    if (dmHelp) {
+    if (this.client.options.dmHelp) {
       message.author
         .send(data, { split: true })
         .then(message.channel.send("I DM'd you my commands."));

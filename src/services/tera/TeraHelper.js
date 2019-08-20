@@ -10,7 +10,7 @@ class TeraHelper {
     throw new Error('TeraHelper cannot be instantiated.');
   }
 
-  async fetchPage(pageUrl, cacheTime = 0, ignoreCached = false) {
+  static async fetchPage(pageUrl, cacheTime = 0, ignoreCached = false) {
     let html;
     try {
       const key = cache.generateKey(pageUrl);
@@ -36,7 +36,7 @@ class TeraHelper {
     }
   }
 
-  parseUrl(path) {
+  static parseUrl(path) {
     const baseUrl = 'http://tera.enmasse.com';
     let targetUrl;
     if (path) {

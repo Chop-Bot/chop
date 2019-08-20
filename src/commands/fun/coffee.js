@@ -1,7 +1,6 @@
 const { Command } = require('chop-tools');
 const moment = require('moment');
 
-const log = require('../../config/log');
 const Profile = require('../../models/profile');
 
 module.exports = new Command({
@@ -14,9 +13,9 @@ module.exports = new Command({
     const mention = message.mentions.members.first();
     if (!mention || (mention && mention.user.id === call.caller)) {
       message.channel.send(
-        `<a:coffeeyum:612761306608697346> **| ${message.author.username}**! you currently have **${
+        `<a:coffeeyum:612761306608697346> **| ${message.author.username}**! You currently have **${
           call.profile.coffee.count
-        }** coffees! Yeah! \\:D **`,
+        }** coffees! Yeah! \\:D`,
       );
       return;
     }

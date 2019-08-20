@@ -2,7 +2,8 @@ const { Command } = require('chop-tools');
 const { MessageEmbed } = require('discord.js');
 
 const log = require('../../config/log');
-const fetchStatus = require('../../services/tera-status/fetchStatus');
+
+const TeraStatusReader = require('../../services/tera/TeraStatusReader');
 
 const addFields = (embed, statuses) => {
   statuses.forEach((currentStatus) => {
@@ -20,14 +21,14 @@ const addFields = (embed, statuses) => {
 module.exports = new Command({
   name: 'status',
   description: 'Check wether the tera servers are online.',
-  // usage: '[platform|region] [platform|region]',
-  run(message, args) {
+  usage: '[platform|region] [platform|region]',
+  run(message) {
     const embed = new MessageEmbed().setColor(3447003).setDescription('Tera Server Status (NA)');
     const start = Date.now();
     log.info('[Tera/Status] Probing...');
 
     // TODO: Add a filter for pc, ps4 and xbox
-    fetchStatus()
+    TeraStatusReader.fetchAndRead()
       .then(statuses => addFields(embed, statuses))
       .then(() => {
         log.info('[Tera/Status] Finished. Took', Date.now() - start, 'ms');

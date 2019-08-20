@@ -2,10 +2,9 @@ const { Command } = require('chop-tools');
 const { MessageEmbed } = require('discord.js');
 
 const log = require('../../config/log');
-const parseUrl = require('../../services/tera-general/parseUrl');
-const fetchNews = require('../../services/tera-news/fetchNews');
-const parseFilter = require('../../services/tera-news/parseFilter');
-const getNewsEmojis = require('../../services/tera-news/getNewsEmojis');
+
+const TeraNewsReader = require('../../services/tera/TeraNewsReader');
+const TeraHelper = require('../../services/tera/TeraHelper');
 
 module.exports = new Command({
   name: 'news',
@@ -15,8 +14,8 @@ module.exports = new Command({
     const start = Date.now();
     log.debug('[Tera/News] Fetching news...');
 
-    const filtered = parseFilter([args[0]]);
-    const news = await fetchNews(filtered ? filtered[0] : 'ALL');
+    const filtered = TeraNewsReader.parsePlatforms([args[0]]);
+    const news = await TeraNewsReader.fetchAndRead(filtered ? filtered[0] : 'ALL');
 
     const embed = new MessageEmbed();
 
@@ -24,12 +23,11 @@ module.exports = new Command({
 
     news.forEach((n) => {
       embed.addField(
-        `${getNewsEmojis(n.platforms)} ${n.title}`,
-        `${n.content}\n[:small_blue_diamond:Read More](${parseUrl(n.href)})\n`,
+        `${TeraNewsReader.getEmojis(n.platforms)} ${n.title}`,
+        `${n.content}\n[:small_blue_diamond:Read More](${TeraHelper.parseUrl(n.href)})\n`,
       );
     });
 
-    // log.debug('[Tera/News] News fetched:', JSON.stringify(news));
     log.debug('[Tera/News] Done! Finished in', Date.now() - start, 'ms');
 
     message.channel.send({ embed });

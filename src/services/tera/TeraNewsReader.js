@@ -8,9 +8,9 @@ const cheerio = require('cheerio');
 const { MessageEmbed } = require('discord.js');
 
 const logError = require('../../util/logError');
-const fetchPage = require('../tera-general/fetchPage');
-const parseUrl = require('../tera-general/parseUrl');
 const emojis = require('../../config/constants').PLATFORM_EMOJIS;
+
+const TeraHelper = require('./TeraHelper');
 
 class TeraNewsReader {
   constructor() {
@@ -25,8 +25,8 @@ class TeraNewsReader {
     if (filter === 'XBOX') route = 'xbox';
 
     try {
-      const html = await fetchPage(
-        parseUrl(`news/categories/${route}`),
+      const html = await TeraHelper.fetchPage(
+        TeraHelper.parseUrl(`news/categories/${route}`),
         ignoreCache ? null : 5 * 60,
         ignoreCache,
       );
@@ -86,7 +86,7 @@ class TeraNewsReader {
     return news;
   }
 
-  static async crawlSummary(html) {
+  static crawlSummary(html) {
     const topics = [];
     const $ = cheerio.load(html);
     const $blogPost = $('#show_blog_post');
@@ -121,11 +121,11 @@ class TeraNewsReader {
    * @param {String} post.img Absolute url to the image of the post
    * @returns {external:MessageEmbed} A new MessageEmbed
    */
-  static async buildEmbed(post) {
+  static buildEmbed(post) {
     const embed = new MessageEmbed().setColor(3447003).setDescription('Tera News (NA)');
     embed.addField(
       `${this.getEmojis(post.platforms)}${post.title}`,
-      `${post.content} [Read on Tera Website](${parseUrl(post.href)})`,
+      `${post.content} [Read on Tera Website](${TeraHelper.parseUrl(post.href)})`,
     );
     const newsSummary = post.topics.map(t => `▫${t}`);
     if (newsSummary.length > 0) {
@@ -135,12 +135,12 @@ class TeraNewsReader {
     return embed;
   }
 
-  static async getEmojis(platforms) {
+  static getEmojis(platforms) {
     const newsEmojis = this.parsePlatforms(platforms).reduce((acc, cur) => acc + emojis[cur], '');
     return newsEmojis;
   }
 
-  static async parsePlatforms(filter) {
+  static parsePlatforms(filter) {
     const removeNonStrings = v => typeof v === 'string';
     const toUpper = v => v.toUpperCase();
     if (!filter || !(filter instanceof Array)) {

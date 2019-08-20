@@ -1,31 +1,31 @@
-const parseFilter = require('../src/services/tera-news/parseFilter');
+const TeraNewsReader = require('../src/services/tera/TeraNewsReader');
 
 describe('Tera News Service', () => {
   describe('Parse Filter', () => {
     test('should return null if no arguments', () => {
-      expect(parseFilter()).toEqual(null);
+      expect(TeraNewsReader.parsePlatforms()).toEqual(null);
     });
 
     test('should filter out invalid types', () => {
       const actual = [true, null, undefined, 'iii', 4444, { a: 1 }, ['c']];
-      expect(parseFilter(actual)).toEqual([]);
+      expect(TeraNewsReader.parsePlatforms(actual)).toEqual([]);
     });
 
     test('should filter invalid filters', () => {
       const actual = ['PC', 'PS4', 'NINTENDO', 'XBOX', 'MOBILE'];
-      expect(parseFilter(actual)).toEqual(['PC', 'PS4', 'XBOX']);
+      expect(TeraNewsReader.parsePlatforms(actual)).toEqual(['PC', 'PS4', 'XBOX']);
     });
 
     test('should upper case valid filters', () => {
       const actual = ['pc', 'ps4', 'xbox'];
-      expect(parseFilter(actual)).toEqual(['PC', 'PS4', 'XBOX']);
+      expect(TeraNewsReader.parsePlatforms(actual)).toEqual(['PC', 'PS4', 'XBOX']);
     });
 
     test('should transform valid aliases', () => {
       const actual = ['windows', 'playstation'];
       const actual2 = ['playstation', 'windows', 'elin'];
-      expect(parseFilter(actual)).toEqual(['PC', 'PS4']);
-      expect(parseFilter(actual2)).toEqual(['PS4', 'PC']);
+      expect(TeraNewsReader.parsePlatforms(actual)).toEqual(['PC', 'PS4']);
+      expect(TeraNewsReader.parsePlatforms(actual2)).toEqual(['PS4', 'PC']);
     });
 
     test('should have no duplicates', () => {
@@ -43,7 +43,7 @@ describe('Tera News Service', () => {
         'Xbox',
         'pc',
       ];
-      expect(parseFilter(actual)).toEqual(['PC', 'XBOX', 'PS4']);
+      expect(TeraNewsReader.parsePlatforms(actual)).toEqual(['PC', 'XBOX', 'PS4']);
     });
   });
 });

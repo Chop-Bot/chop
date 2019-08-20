@@ -4,12 +4,9 @@ const log = require('../config/log');
 const logError = require('../util/logError');
 const TeraNews = require('../models/teraNews');
 const Notification = require('../models/notification');
-const fetchNews = require('../services/tera-news/fetchNews');
-// const fetchFakeNews = require('../services/tera-news/fetchFakeNews');
-const parseUrl = require('../services/tera-general/parseUrl');
-const fetchPage = require('../services/tera-general/fetchPage');
-const buildEmbed = require('../services/tera-news/buildEmbed');
-const getSummary = require('../services/tera-news/getSummary');
+
+const TeraNewsReader = require('../services/tera/TeraNewsReader');
+const TeraHelper = require('../services/tera/TeraHelper');
 
 module.exports = class extends Task {
   constructor() {
@@ -45,10 +42,10 @@ module.exports = class extends Task {
       const channel = guild.channels.get(channelId);
       if (!channel) return;
       // crawl the post page and get info about it
-      fetchPage(parseUrl(newPost.href), 30 * 60)
+      TeraHelper.fetchPage(TeraHelper.parseUrl(newPost.href), 30 * 60)
         .then((html) => {
-          const postSummary = getSummary(html);
-          const embed = buildEmbed({ ...newPost, ...postSummary });
+          const postSummary = TeraNewsReader.crawlSummary(html);
+          const embed = TeraNewsReader.buildEmbed({ ...newPost, ...postSummary });
           try {
             // FIXME: This will throw if the bot lacks embed permissions
             channel.send({ embed });
@@ -63,7 +60,9 @@ module.exports = class extends Task {
         })
         .catch((err) => {
           logError(
-            `[Task/CheckNews] Could not fetch summary for new post at ${parseUrl(newPost.href)}`,
+            `[Task/CheckNews] Could not fetch summary for new post at ${TeraHelper.parseUrl(
+              newPost.href,
+            )}`,
             err,
           );
         });
@@ -90,8 +89,8 @@ module.exports = class extends Task {
   async getCurrentAndOldNews() {
     let current = null;
     try {
-      current = await fetchNews(null, true);
-      // current = await fetchFakeNews();
+      current = await TeraNewsReader.fetchAndRead(null, true);
+      // current = await TeraNewsReader.fetchFakeAndRead();
     } catch (err) {
       logError('[Task/CheckNews] Failed to fetch current news.', err);
     }

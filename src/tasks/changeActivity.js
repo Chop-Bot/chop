@@ -1,7 +1,4 @@
 const { Task } = require('chop-tools');
-const { prefix } = require('../config/command');
-
-const logError = require('../util/logError');
 
 module.exports = class extends Task {
   constructor() {
@@ -12,7 +9,7 @@ module.exports = class extends Task {
     const options = [
       ['Anya Sleeping', { type: 'WATCHING' }],
       ['With Anya', { type: 'PLAYING' }],
-      [`${prefix}help`, { type: 'LISTENING' }],
+      [`${this.client.options.prefix}help`, { type: 'LISTENING' }],
     ];
     const pick = options[Math.floor(Math.random() * options.length)];
     try {

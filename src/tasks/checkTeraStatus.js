@@ -2,11 +2,10 @@ const { Task } = require('chop-tools');
 
 const log = require('../config/log');
 const logError = require('../util/logError');
-const TeraStatus = require('../models/teraStatus');
 const Notification = require('../models/notification');
-const fetchStatus = require('../services/tera-status/fetchStatus');
-// const fetchFakeStatus = require('../services/tera-status/fetchFakeStatus');
-const buildEmbed = require('../services/tera-status/buildEmbed');
+const TeraStatus = require('../models/teraStatus');
+
+const TeraStatusReader = require('../services/tera/TeraStatusReader');
 
 module.exports = class extends Task {
   constructor() {
@@ -40,7 +39,7 @@ module.exports = class extends Task {
       if (!guild) return;
       const channel = guild.channels.get(channelId);
       if (!channel) return;
-      const embed = buildEmbed(currentStatus);
+      const embed = TeraStatusReader.buildEmbed(currentStatus);
       try {
         // FIXME: This will throw if the bot lacks embed permissions
         channel.send({ embed });
@@ -80,7 +79,7 @@ module.exports = class extends Task {
   async getCurrentAndOldStatus() {
     let current = null;
     try {
-      current = await fetchStatus();
+      current = await TeraStatusReader.fetchAndRead();
       // current = await fetchFakeStatus();
     } catch (err) {
       logError('[Task/CheckTeraStatus] Failed to fetch current status.', err);

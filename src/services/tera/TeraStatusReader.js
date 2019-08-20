@@ -8,8 +8,8 @@ const cheerio = require('cheerio');
 const { MessageEmbed } = require('discord.js');
 
 const logError = require('../../util/logError');
-const parseUrl = require('../tera-general/parseUrl');
-const fetchPage = require('../tera-general/fetchPage');
+
+const TeraHelper = require('./TeraHelper');
 
 class TeraStatusReader {
   constructor() {
@@ -18,7 +18,11 @@ class TeraStatusReader {
 
   static async fetchAndRead() {
     try {
-      const html = await fetchPage(parseUrl('support/server-status'), null, true);
+      const html = await TeraHelper.fetchPage(
+        TeraHelper.parseUrl('support/server-status'),
+        null,
+        true,
+      );
       const statuses = this.crawl(html);
       return statuses;
     } catch (err) {
@@ -29,7 +33,7 @@ class TeraStatusReader {
 
   static async fetchFakeAndRead() {
     try {
-      const html = await read(path.join(__dirname, 'fake-sample.html'));
+      const html = await read(path.join(__dirname, 'status-sample.html'));
       const statuses = this.crawl(html);
       return statuses;
     } catch (err) {

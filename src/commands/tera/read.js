@@ -1,12 +1,8 @@
 const { Command } = require('chop-tools');
 const { MessageEmbed } = require('discord.js');
 
-const parseUrl = require('../../services/tera-general/parseUrl');
-const fetchNews = require('../../services/tera-news/fetchNews');
-const getSummary = require('../../services/tera-news/getSummary');
-const getNewsEmojis = require('../../services/tera-news/getNewsEmojis');
-const parseFilter = require('../../services/tera-news/parseFilter');
-const fetchPage = require('../../services/tera-general/fetchPage');
+const TeraNewsReader = require('../../services/tera/TeraNewsReader');
+const TeraHelper = require('../../services/tera/TeraHelper');
 
 const parseOrder = (input, len) => {
   let order = Number.isNaN(Number(input)) ? 1 : Number(input);
@@ -31,8 +27,8 @@ module.exports = new Command({
   usage: '[order|platform] [order] \nExample: `chop read 1´ or `chop read pc 3`',
   cooldown: 5,
   run: async (message, args) => {
-    const filtered = parseFilter([args[0]]);
-    const news = await fetchNews(filtered ? filtered[0] : 'ALL');
+    const filtered = TeraNewsReader.parsePlatforms([args[0]]);
+    const news = await TeraNewsReader.fetchAndRead(filtered ? filtered[0] : 'ALL');
 
     let order;
 
@@ -44,11 +40,11 @@ module.exports = new Command({
 
     const embed = new MessageEmbed();
 
-    fetchPage(parseUrl(news[order].href), 30 * 60).then((html) => {
-      const summary = getSummary(html);
+    TeraHelper.fetchPage(TeraHelper.parseUrl(news[order].href), 30 * 60).then((html) => {
+      const summary = TeraNewsReader.crawlSummary(html);
       embed.addField(
-        `${getNewsEmojis(news[order].platforms)}${summary.title}`,
-        `${news[order].content} [Read on Tera Website](${parseUrl(news[order].href)})`,
+        `${TeraNewsReader.getEmojis(news[order].platforms)}${summary.title}`,
+        `${news[order].content} [Read on Tera Website](${TeraHelper.parseUrl(news[order].href)})`,
       );
       const newsSummary = summary.topics.map(t => `▫${t}`);
       if (newsSummary.length > 0) {

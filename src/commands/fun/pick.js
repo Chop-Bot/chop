@@ -4,13 +4,19 @@ const Util = require('../../util/Util');
 
 module.exports = new Command({
   name: 'pick',
-  description: 'Pick something from a set.',
+  description:
+    'Pick something from a set. Separate your options with a comma or every word will be a choice.',
   category: 'other',
   args: ['choice'],
   usage: '[what to pick from]',
   aliases: ['choice'],
   async run(message, args) {
-    const result = Util.pickFrom(args);
+    let result;
+    if (message.content.includes(',')) {
+      result = Util.pickFrom(args.join(' ').split(','));
+    } else {
+      result = Util.pickFrom(args);
+    }
     let msg = await message.channel.send(
       `:page_facing_up: **| ${
         message.author.username

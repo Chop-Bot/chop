@@ -52,7 +52,7 @@ class TwitterClient {
             return;
           }
           // TODO: Save this to cache in case somone decides to spam the twitter command
-          resolve(tweets.id_str);
+          resolve(tweet.id_str);
         },
       );
     });

@@ -61,6 +61,7 @@ module.exports = class extends Task {
     let current = null;
     try {
       current = await this.client.twitter.getLatestTeraTweetID();
+      if (!current) log.warn('[Task/CheckTwitter] Could not get current status.');
     } catch (err) {
       logError('[Task/CheckTwitter] Failed to fetch current twitter.', err);
     }
@@ -68,6 +69,7 @@ module.exports = class extends Task {
     try {
       const latestDbEntry = await TeraTwitter.getLatest();
       old = latestDbEntry[0].latestTweetID;
+      if (!old) log.warn('[Task/CheckTwitter] Could not get old status.');
     } catch (err) {
       logError('[Task/CheckTwitter] Failed to get old twitter from db.', err);
     }

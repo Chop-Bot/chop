@@ -25,4 +25,9 @@ module.exports = class Util {
       }),
     );
   }
+
+  static pickFrom(arr) {
+    const index = Math.floor(Math.random() * arr.length);
+    return arr[index];
+  }
 };

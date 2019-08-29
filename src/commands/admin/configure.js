@@ -98,7 +98,7 @@ const configureNotifications = async (message, type) => {
       channel: chosenChannel.id,
     });
   } else {
-    await Notification.findAndUpdateNews({
+    await Notification.updateNotification({
       guild,
       type,
       newInfo: {

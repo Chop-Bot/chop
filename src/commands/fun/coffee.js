@@ -8,7 +8,7 @@ const timeToNextCoffe = (lastCoffee) => {
   const now = new moment();
   const lastUsed = moment(lastCoffee);
   const diff = now.diff(lastUsed);
-  const d24 = moment.duration(24, 'h');
+  const d24 = moment.duration(3, 'h');
   return d24 - diff;
 };
 

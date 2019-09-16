@@ -43,6 +43,10 @@ module.exports = new Command({
           value: `${ping}ms`,
           inline: true,
         },
+        {
+          name: 'Home',
+          value: 'https://chop.coffee/',
+        },
       ],
     };
     const embed = new MessageEmbed(embedData);

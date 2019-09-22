@@ -15,7 +15,12 @@ const profileSchema = new Schema({
     time: { type: Date, default: new Date('1970-01-01') },
   },
   daily: {
+    count: { type: Number, default: 0 },
     time: { type: Date, default: new Date('1970-01-01') },
+  },
+  money: {
+    type: Number,
+    default: 0,
   },
 });
 

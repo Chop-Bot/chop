@@ -24,6 +24,17 @@ exports.DISCORD_SERVERS = {
   Valkyrie: { link: 'https://discord.gg/M345WBe', emoji: '<:valkyrie:623133443878027276>' },
 };
 
+exports.BEAN_EMOJI = '<:coffeebeans:625349367339024443>';
+
+exports.CATEGORY_EMOJIS = {
+  admin: ':gear:',
+  currency: ':moneybag:',
+  other: ':page_facing_up:',
+  fun: ':joy:',
+  random: ':grey_question:',
+  tera: '<:tera:625383766134620186>',
+};
+
 exports.GATHERING_MAIN = 'https://i.imgur.com/upDHYav.png';
 
 exports.GATHERING_EXTRAS = 'https://imgur.com/a/ARR2Q3H';

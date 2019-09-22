@@ -15,7 +15,7 @@ module.exports = new Command({
     const embedData = {
       color: 13044507,
       footer: {
-        text: `Version ${module.require('../../package.json').version || 'latest'}`,
+        text: `Version ${module.require('../../../package.json').version || 'latest'}`,
       },
       thumbnail: {
         url: message.client.user.avatarURL(),

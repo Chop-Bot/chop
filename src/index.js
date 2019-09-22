@@ -13,7 +13,7 @@ db((mongo) => {
     bot();
     web();
   } catch (err) {
-    logError('[Index] Unhandled promise caught. Restarting.', err, true);
+    logError('[Index] Unhandled exception. Restarting.', err, true);
     process.exit(1);
   }
 });
@@ -27,4 +27,5 @@ process.on('SIGTERM', () => events.emit('kill'));
 process.on('SIGINT', () => events.emit('kill'));
 process.on('uncaughtException', (err, origin) => {
   log.getLogger('critical').error('Uncaught Exception!', err, 'Origin:', origin);
+  process.exit(1);
 });

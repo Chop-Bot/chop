@@ -32,7 +32,11 @@ class TeraHelper {
       return html;
     } catch (e) {
       log.error('Failed to fetch page:', pageUrl);
-      throw e;
+      if (e.message.includes('500')) {
+        throw new Error('Tera Status page returned 500, Internal server error.');
+      } else {
+        throw e;
+      }
     }
   }
 

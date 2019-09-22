@@ -5,13 +5,14 @@ const slug = require('slug');
 
 const events = require('../../events');
 const log = require('../../config/log');
-const logError = require('../../util/logError');
 const filesystemCache = require('./filesystemCache');
 
 const CACHE_TYPE = {
   FS: 1,
   REDIS: 2,
 };
+
+// TODO: Wrap redis methods with easy to remember names
 
 const cache = {
   client: {},

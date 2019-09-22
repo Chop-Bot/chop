@@ -13,8 +13,11 @@ const tmp = require('tmp');
 const log = require('../../config/log');
 const events = require('../../events');
 
+// TODO: Add a batch/getAll/getMany method
+
 let dir;
 
+// FIXME: This does not need to be random
 function getDir() {
   if (!dir) {
     dir = tmp.dirSync({ prefix: 'chop-' }).name;

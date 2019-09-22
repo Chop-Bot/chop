@@ -39,7 +39,7 @@ class TwitterClient {
         (error, tweets, response) => {
           if (error) {
             logError('[Twitter] Could not retrieve latest Tera Tweet.', error);
-            reject(error);
+            // reject(error);
             return;
           }
           let tweet;

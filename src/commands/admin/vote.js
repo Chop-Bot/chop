@@ -11,7 +11,10 @@ function getKeyByValue(object, value) {
 module.exports = new Command({
   name: 'vote',
   description: 'Create a voting based on the emojis on your message. (Admin only)',
-  usage: '[time in seconds] <Your message>',
+  category: 'admin',
+  args: ['time in seconds'],
+  usage: '[time in seconds] {Your message}',
+  example: '30 Are cookies good or evil? :cookie: For good. :eyes: For evil.',
   admin: true,
   run: async (message, args) => {
     const emojis = getEmojis(message).map(e => getKeyByValue(irregulars, e) || e);
@@ -26,28 +29,28 @@ module.exports = new Command({
     }
     const question = `${content.slice(index)}\n\nInitiated by: ${message.author}`;
     await message.delete();
-    if (emojis.length > 0) {
-      const votes = await prompter.vote(channel, {
-        choices: emojis,
-        question,
-        timeout,
-      });
-      const winner = votes.emojis[0].count > (votes.emojis[1] ? votes.emojis[1].count : 0)
-        ? votes.emojis[0]
-        : null;
-      if (winner) {
-        channel.send(
-          `${winner.emoji} wins with **${(winner.count / votes.total) * 100}%** of the votes!`,
-        );
-      }
-      channel.send(
-        `**Results:**\n ${votes.emojis.reduce(
-          (acc, cur) => `${acc + cur.emoji} -> ${(cur.count / votes.total) * 100}%\n`,
-          '',
-        )}`,
-      );
-    } else {
+    if (emojis.length <= 0) {
       channel.send("I couldn't find any emojis in your message.");
+      return;
     }
+    const votes = await prompter.vote(channel, {
+      choices: emojis,
+      question,
+      timeout,
+    });
+    const aEmoji = votes.emojis;
+    const hasWinner = aEmoji[0].count > (aEmoji[1] ? aEmoji[1].count : 0);
+    const winner = hasWinner ? aEmoji[0] : null;
+    if (winner) {
+      channel.send(
+        `${winner.emoji} wins with **${(winner.count / votes.total) * 100}%** of the votes!`,
+      );
+    }
+    channel.send(
+      `**Results:**\n ${aEmoji.reduce(
+        (acc, cur) => `${acc + cur.emoji} -> ${(cur.count / votes.total) * 100 || 0}%\n`,
+        '',
+      )}`,
+    );
   },
 });

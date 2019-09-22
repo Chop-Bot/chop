@@ -4,6 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = new Command({
   name: 'info',
   description: 'Show some stats about Chop.',
+  category: 'other',
   run(message) {
     const guilds = message.client.guilds.size;
     const users = message.client.users.size;

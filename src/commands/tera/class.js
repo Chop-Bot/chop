@@ -7,6 +7,7 @@ module.exports = new Command({
   name: 'class',
   aliases: ['classes', 'discords'],
   description: 'Shows a list of Tera Classes discord servers.',
+  category: 'tera',
   async run(message, args) {
     const embed = new MessageEmbed({
       author: { name: 'Join a Class Discord Server', iconURL: message.author.avatarURL() },

@@ -21,7 +21,8 @@ const addFields = (embed, statuses) => {
 module.exports = new Command({
   name: 'status',
   description: 'Check wether the tera servers are online.',
-  usage: '[platform|region] [platform|region]',
+  category: 'tera',
+  aliases: ['server', 'servers'],
   run(message) {
     const embed = new MessageEmbed().setColor(3447003).setDescription('Tera Server Status (NA)');
     const start = Date.now();

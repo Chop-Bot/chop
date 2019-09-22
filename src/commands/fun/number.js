@@ -4,8 +4,9 @@ const Util = require('../../util/Util');
 
 module.exports = new Command({
   name: 'number',
-  description: 'Gives you a random number',
-  category: 'fun',
+  description:
+    "Gives you a random number. You can set the min and max values, but can't go over 1mil.",
+  category: 'random',
   usage: '[min|max] [max]',
   aliases: ['num', 'random'],
   async run(message, args, call) {
@@ -16,9 +17,7 @@ module.exports = new Command({
     const [min, max] = [Math.min(first, second), Math.max(first, second)];
     const result = Util.randomInt(min, max);
     let msg = await message.channel.send(
-      `:page_facing_up: **| ${
-        message.author.username
-      }** asks for a random number between **${first}** and **${second}**\n:1234: Your random number is`,
+      `:page_facing_up: **| ${message.author.username}** asks for a random number between **${first}** and **${second}**\n:1234: Your random number is`,
     );
     await Util.awaitFor(200);
     msg = await msg.edit(`${msg.content}.`);

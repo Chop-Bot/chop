@@ -9,7 +9,7 @@ module.exports = new Command({
   args: ['suggestion'],
   aliases: ['suggest'],
   category: 'other',
-  usage: '<Your Suggestion>',
+  usage: '{Your Suggestion}',
   cooldown: 120,
   async run(message, args, call) {
     // Validate suggestion

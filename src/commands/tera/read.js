@@ -24,7 +24,9 @@ const isValidOrder = (input, len) => {
 module.exports = new Command({
   name: 'read',
   description: 'Reads the summary of a tera news post.',
-  usage: '[order|platform] [order] \nExample: `chop read 1´ or `chop read pc 3`',
+  category: 'tera',
+  usage: '[order|platform] [order]',
+  example: 'pc 2',
   cooldown: 5,
   run: async (message, args) => {
     const filtered = TeraNewsReader.parsePlatforms([args[0]]);

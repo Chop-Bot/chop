@@ -9,7 +9,9 @@ const TeraHelper = require('../../services/tera/TeraHelper');
 module.exports = new Command({
   name: 'news',
   description: 'Fetch the latest tera news.',
+  category: 'tera',
   usage: '[filter]',
+  example: 'pc',
   run: async (message, args) => {
     const start = Date.now();
     log.debug('[Tera/News] Fetching news...');

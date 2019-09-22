@@ -139,6 +139,7 @@ const configureNewNotification = async (message) => {
 module.exports = new Command({
   name: 'configure',
   description: 'Command for server moderators to configure Chop Bot.',
+  category: 'admin',
   admin: true,
   run: async (message) => {
     const configOptions = new Map([

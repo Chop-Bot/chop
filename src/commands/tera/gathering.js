@@ -7,6 +7,7 @@ module.exports = new Command({
   name: 'gathering',
   aliases: ['gather', 'resources'],
   description: 'Tera gathering spots.',
+  category: 'tera',
   usage: '[detailed]',
   async run(message, args) {
     const arg0 = args[0] ? args[0].toLowerCase() || null : null;

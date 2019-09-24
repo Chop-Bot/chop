@@ -49,7 +49,7 @@ module.exports = new Command({
 
     const format = (pGender, pRace, pClass) => {
       let formatted = classEmojis[pClass[0]];
-      if (pRace[1].length > 1) formatted += `${pGender} `;
+      if (pGender) formatted += `${pGender} `;
       formatted += `${pRace[0]} `;
       formatted += pClass[0];
       return formatted;

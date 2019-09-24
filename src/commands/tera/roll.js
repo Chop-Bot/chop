@@ -8,6 +8,8 @@ const classEmojis = {};
 Object.keys(classList).forEach((c) => {
   classEmojis[c] = classList[c].emoji;
 });
+classEmojis.Priest = '<:priest:623133443940941835>';
+classEmojis.Mystic = '<:mystic:623133444121165825>';
 
 module.exports = new Command({
   name: 'roll',

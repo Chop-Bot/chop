@@ -55,7 +55,9 @@ module.exports = new Command({
 
     const pickedClass = pick(classes);
     const pickedRace = races[pick(pickedClass[1])];
-    const pickedGender = pickedClass[0] === 'Gunner' || pickedClass === 'Valkyrie' ? 0 : genders[pick(pickedRace[1])];
+    const pickedGender = pickedClass[0] === 'Gunner' || pickedClass[0] === 'Valkyrie'
+      ? 0
+      : genders[pick(pickedRace[1])];
 
     message.channel.send(
       `Your next character shall be a **${format(pickedGender, pickedRace, pickedClass)}**`,

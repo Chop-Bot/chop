@@ -57,7 +57,8 @@ module.exports = new Command({
 
     const pickedClass = pick(classes);
     const pickedRace = races[pick(pickedClass[1])];
-    const pickedGender = pickedClass[0] === 'Gunner' || pickedClass[0] === 'Valkyrie'
+    const pickedGender = ['Gunner', 'Valkyrie'].includes(pickedClass[0])
+      || ['Elin', 'Popori', 'Baraka'].includes(pickedRace[0])
       ? 0
       : genders[pick(pickedRace[1])];
 

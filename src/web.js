@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const log = require('./config/log');
 const cache = require('./services/cache/cache');
@@ -9,18 +10,22 @@ const port = process.env.PORT || 3000;
 module.exports = () => {
   const app = express();
 
+  app.use(cors());
+
   app.get('/commands', (req, res) => {
     cache.client
       .get('commands')
       .then((data) => {
         if (data) {
-          res.status(200).json(JSON.parse(data));
+          // eslint-disable-next-line global-require
+          const { version } = require('../package.json');
+          res.status(200).json({ commands: JSON.parse(data), version });
         } else {
-          res.status(200).json({ message: 'Could not find resource.' });
+          res.status(500).json({ message: 'Could not find resource.' });
         }
       })
       .catch((err) => {
-        res.status(500).end();
+        res.status(500).json({ message: 'Something went wrong, please try again later.' });
       });
   });
 

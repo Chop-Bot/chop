@@ -4,6 +4,7 @@ const cors = require('cors');
 const log = require('./config/log');
 const cache = require('./services/cache/cache');
 const events = require('./events');
+const guildRelay = require('./services/guild');
 
 const port = process.env.PORT || 3000;
 
@@ -39,6 +40,8 @@ module.exports = () => {
       server.close();
     });
   });
+
+  guildRelay(server);
 
   log.info(`[Web] Express server listening at port ${port}.`);
 };

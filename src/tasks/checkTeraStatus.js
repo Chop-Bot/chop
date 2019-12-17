@@ -19,10 +19,17 @@ module.exports = class extends Task {
     if (!currentStatus || !oldStatus) return;
 
     // check if there is change in any of the servers, return if not
-    const serversThatChanged = this.getServersThatChanged(
-      oldStatus.servers,
-      currentStatus.reduce((acc, cur) => [...acc, ...cur.servers], []),
-    );
+    let serversThatChanged;
+    try {
+      serversThatChanged = this.getServersThatChanged(
+        oldStatus.servers,
+        currentStatus.reduce((acc, cur) => [...acc, ...cur.servers], []),
+      );
+    } catch (err) {
+      // If the code above throws the markup in the tera website probably changed.
+      log.error(err);
+      return;
+    }
     if (serversThatChanged.length < 1) return;
     log.info('[Task/CheckStatus] Change detected, preparing to notify.');
 

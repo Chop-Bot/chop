@@ -6,7 +6,7 @@ module.exports = (message, err, critical = false) => {
     logger = log.getLogger('critical');
   }
   logger.error(message);
-  if (!err.message.includes('Page not found')) logger.error(err.message);
+  if (err.message && !err.message.includes('Page not found')) logger.error(err.message);
   logger.error(err.stack);
   logger.error(
     `Stack to logError\n${new Error().stack

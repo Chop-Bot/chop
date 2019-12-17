@@ -90,8 +90,8 @@ module.exports = class extends Task {
     let current = null;
     try {
       current = await TeraNewsReader.fetchAndRead(null, true);
-      // current = await TeraNewsReader.fetchFakeAndRead();
     } catch (err) {
+      // if the code above throws, the html in the tera website is probably fucked.
       logError('[Task/CheckNews] Failed to fetch current news.', err);
     }
     let old = null;
